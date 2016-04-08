@@ -1,4 +1,4 @@
-# frzr-dom
+# FRZR-dom
 render [FRZR](https://frzr.js.org) on server side
 
 ## installation
