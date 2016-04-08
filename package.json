@@ -4,7 +4,8 @@
   "description": "render FRZR on server side",
   "main": "dist/frzr-dom.js",
   "scripts": {
-    "build": "rollup -f cjs src/index.js -o dist/frzr-dom.js"
+    "build": "rollup -f cjs src/index.js -o dist/frzr-dom.js",
+    "postversion": "git push --tags"
   },
   "author": "",
   "license": "ISC",
