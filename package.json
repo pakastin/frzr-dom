@@ -1,0 +1,15 @@
+{
+  "name": "frzr-dom",
+  "version": "0.0.1",
+  "description": "render FRZR on server side",
+  "main": "dist/frzr-dom.js",
+  "scripts": {
+    "build": "rollup -f cjs src/index.js -o dist/frzr-dom.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "rollup": "~0.25.8",
+    "uglify-js": "~2.6.2"
+  }
+}
