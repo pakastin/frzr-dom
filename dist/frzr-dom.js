@@ -180,10 +180,13 @@ TextNode.prototype.render = function () {
 global.document = {
   createElement: createElement,
   createTextNode: createTextNode,
-  createElementNS: createElementNS
+  createElementNS: createElementNS,
+  body: new HTMLElement({
+    tagName: 'body'
+  })
 };
 
-global.window = {}
+global.window = {};
 global.HTMLElement = HTMLElement;
 global.Node = Node;
 global.navigator = {
