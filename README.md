@@ -1,4 +1,9 @@
 # frzr-dom
-render FRZR on server side
+render [FRZR](https://frzr.js.org) on server side
 
-Just `require('frzr-dom')` and it will create a fake DOM for FRZR.
+## installation
+```
+npm install frzr-dom
+```
+
+Just `require('frzr-dom')` and it will create a fake DOM for [FRZR](https://frzr.js.org). That's it!
