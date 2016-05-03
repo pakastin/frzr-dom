@@ -5,14 +5,12 @@
   "main": "dist/frzr-dom.js",
   "scripts": {
     "build": "rollup -f cjs src/index.js -o dist/frzr-dom.js",
-    "postversion": "git push --tags",
-    "test": "find test -name \"*.spec.js\" -exec rollup -f cjs {} \\;|node"
+    "postversion": "git push --tags"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "rollup": "~0.25.8",
-    "tape": "^4.5.1",
     "uglify-js": "~2.6.2"
   }
 }
