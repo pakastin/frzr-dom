@@ -66,7 +66,7 @@ HTMLElement.prototype.render = function () {
 
   if (!isVoidEl && hasChildren) {
     return '<' + [this.tagName].concat(attributes).join(' ') + '>' + this.childNodes.map(childRenderer).join('') + '</' + this.tagName + '>'
-  } else if (content) {
+  } else if (!isVoidEl && content) {
     return '<' + [this.tagName].concat(attributes).join(' ') + '>' + content + '</' + this.tagName + '>';
   } else {
     return '<' + [this.tagName].concat(attributes).join(' ') + (isVoidEl ? '/>' : '></' + this.tagName + '>');
