@@ -28,6 +28,8 @@ ClassList.prototype.contains = function (className) {
       break;
     }
   }
+
+  return found;
 }
 
 ClassList.prototype.remove = function (className) {
