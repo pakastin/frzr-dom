@@ -194,7 +194,7 @@ global.navigator = {
 }
 
 function render (view) {
-  var el = view.el || el;
+  var el = view.el || view;
 
   return el.render();
 }
