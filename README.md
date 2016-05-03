@@ -7,5 +7,8 @@ npm install frzr-dom
 ```
 
 ## usage
-- First `require('frzr-dom')` and it will create a fake DOM for [FRZR](https://frzr.js.org).
-- Then use `require('frzr-dom').render(view/el)` to produce HTML. That's it!
+```
+var render = require('frzr-dom').render;
+```
+- Requiring `frzr-dom` will create a fake DOM for [FRZR](https://frzr.js.org).
+- You can then use `render(view)` or `render(el)` to produce HTML. That's it!
