@@ -33,6 +33,8 @@ ClassList.prototype.contains = function (className) {
 }
 
 ClassList.prototype.remove = function (className) {
+  var classNames = this.slice(0);
+
   for (var i = 0; i < this.length; i++) {
     if (classNames[i] === className) {
       this.splice(i, 1);
