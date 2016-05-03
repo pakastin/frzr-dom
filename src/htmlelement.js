@@ -2,6 +2,9 @@
 import { ClassList } from './classlist';
 import { Node } from './node';
 
+// Source: https://www.w3.org/TR/html-markup/syntax.html#syntax-elements
+var rVoidElements = /area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr/;
+
 export function HTMLElement (options) {
   this.childNodes = [];
   this.style = {};
@@ -9,6 +12,8 @@ export function HTMLElement (options) {
   for (var key in options) {
     this[key] = options[key];
   }
+
+  this.isVoidEl = rVoidElements.test(this.tagName.toLowerCase());
 }
 
 HTMLElement.prototype = Object.create(Node.prototype);
@@ -23,12 +28,13 @@ HTMLElement.prototype.render = function () {
   var attributes = [];
   var hasChildren = false;
   var content = '';
+  var isVoidEl = this.isVoidEl;
 
   for (var key in this) {
-    if (!this.hasOwnProperty(key)) {
+    if ('isVoidEl' === key || !this.hasOwnProperty(key)) {
       continue;
     }
-    if (key === 'childNodes') {
+    if (!isVoidEl && key === 'childNodes') {
       if (this.childNodes.length) {
         hasChildren = true;
       }
@@ -49,12 +55,12 @@ HTMLElement.prototype.render = function () {
     }
   }
 
-  if (hasChildren) {
+  if (!isVoidEl && hasChildren) {
     return '<' + [this.tagName].concat(attributes).join(' ') + '>' + this.childNodes.map(childRenderer).join('') + '</' + this.tagName + '>'
   } else if (content) {
     return '<' + [this.tagName].concat(attributes).join(' ') + '>' + content + '</' + this.tagName + '>';
   } else {
-    return '<' + [this.tagName].concat(attributes).join(' ') + '>';
+    return '<' + [this.tagName].concat(attributes).join(' ') + (isVoidEl ? '/>' : '></' + this.tagName + '>');
   }
 }
 
@@ -70,6 +76,9 @@ HTMLElement.prototype.getAttribute = function (attr) {
 }
 
 HTMLElement.prototype.appendChild = function (child) {
+  if (this.isVoidEl) {
+    return; // Silently ignored
+  }
   child.parentNode = this;
   for (var i = 0; i < this.childNodes.length; i++) {
     if (this.childNodes[i] === child) {
@@ -91,6 +100,9 @@ HTMLElement.prototype.insertBefore = function (child, before) {
 }
 
 HTMLElement.prototype.removeChild = function (child) {
+  if (this.isVoidEl) {
+    return; // Silently ignored
+  }
   child.parentNode = null;
   for (var i = 0; i < this.childNodes.length; i++) {
     if (this.childNodes[i] === child) {
