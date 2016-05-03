@@ -1,7 +1,7 @@
 
 import { HTMLElement } from './htmlelement';
-import { Node } from './node';
-import { TextNode } from './textnode';
+import { Node } from './node';
+import { TextNode } from './textnode';
 
 global.document = {
   createElement: createElement,
