@@ -38,7 +38,10 @@ HTMLElement.prototype.render = function () {
     if ('isVoidEl' === key || !this.hasOwnProperty(key)) {
       continue;
     }
-    if (!isVoidEl && key === 'childNodes') {
+    if (key === 'childNodes') {
+      if (isVoidEl) {
+        continue;
+      }
       if (this.childNodes.length) {
         hasChildren = true;
       }
