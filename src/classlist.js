@@ -1,6 +1,6 @@
 
 export function ClassList (el) {
-  var classNames = (this.className && this.className.split(' ')) || [];
+  var classNames = (el.className && el.className.split(' ')) || [];
 
   for (var i = 0; i < classNames.length; i++) {
     this.push(classNames[i]);
