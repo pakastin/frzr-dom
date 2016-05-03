@@ -50,15 +50,11 @@ HTMLElement.prototype.render = function () {
   }
 
   if (hasChildren) {
-    if (attributes.length) {
-      return '<' + this.tagName + ' ' + attributes.join('') + '>' + this.childNodes.map(childRenderer).join('') + '</' + this.tagName + '>'
-    } else {
-      return '<' + this.tagName + '>' + this.childNodes.map(childRenderer).join('') + '</' + this.tagName + '>'
-    }
+    return '<' + [this.tagName].concat(attributes).join(' ') + '>' + this.childNodes.map(childRenderer).join('') + '</' + this.tagName + '>'
   } else if (content) {
-    return '<' + this.tagName + '>' + content + '</' + this.tagName + '>';
+    return '<' + [this.tagName].concat(attributes).join(' ') + '>' + content + '</' + this.tagName + '>';
   } else {
-    return '<' + this.tagName + '>';
+    return '<' + [this.tagName].concat(attributes).join(' ') + '>';
   }
 }
 
