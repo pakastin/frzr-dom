@@ -1,6 +1,6 @@
 
 export function ClassList (el) {
-  var classNames = (this.className && this.className.split(' ')) || [];
+  var classNames = (el.className && el.className.split(' ')) || [];
 
   for (var i = 0; i < classNames.length; i++) {
     this.push(classNames[i]);
@@ -28,9 +28,13 @@ ClassList.prototype.contains = function (className) {
       break;
     }
   }
+
+  return found;
 }
 
 ClassList.prototype.remove = function (className) {
+  var classNames = this.slice(0);
+
   for (var i = 0; i < this.length; i++) {
     if (classNames[i] === className) {
       this.splice(i, 1);
