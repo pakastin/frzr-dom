@@ -45,6 +45,8 @@ HTMLElement.prototype.render = function () {
       if (this.childNodes.length) {
         hasChildren = true;
       }
+    } else if (key === 'className') {
+      attributes.push('class="' + this[key] + '"');
     } else if (key === 'innerHTML') {
       content = this.innerHTML;
     } else if (key === 'style') {
