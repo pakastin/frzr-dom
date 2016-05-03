@@ -13,6 +13,10 @@ export function HTMLElement (options) {
     this[key] = options[key];
   }
 
+  if (!this.tagName) {
+    this.tagName = 'div';
+  }
+
   this.isVoidEl = rVoidElements.test(this.tagName.toLowerCase());
 }
 
