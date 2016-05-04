@@ -23,9 +23,12 @@ export function HTMLElement (options) {
 HTMLElement.prototype = Object.create(Node.prototype);
 HTMLElement.prototype.constructor = HTMLElement;
 
-var doNotRender = {
+var shouldNotRender = {
   tagName: true,
-  view: true
+  view: true,
+  isVoidEl: true,
+  parentNode: true,
+  childNodes: true
 }
 
 HTMLElement.prototype.render = function () {
@@ -38,10 +41,7 @@ HTMLElement.prototype.render = function () {
     if ('isVoidEl' === key || !this.hasOwnProperty(key)) {
       continue;
     }
-    if (key === 'childNodes') {
-      if (isVoidEl) {
-        continue;
-      }
+    if (!isVoidEl && key === 'childNodes') {
       if (this.childNodes.length) {
         hasChildren = true;
       }
@@ -59,7 +59,7 @@ HTMLElement.prototype.render = function () {
       }
     } else if (key === 'textContent') {
       content = this.textContent;
-    } else if (key !== 'view' && key !== 'tagName' && key !== 'parentNode') {
+    } else if (!shouldNotRender[key]) {
       attributes.push(key + '="' + this[key] + '"');
     }
   }
