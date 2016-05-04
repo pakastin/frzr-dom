@@ -1,10 +1,14 @@
 'use strict';
 
 function ClassList (el) {
+  var this$1 = this;
+
   var classNames = (this.className && this.className.split(' ')) || [];
 
+  this.length = classNames.length;
+
   for (var i = 0; i < classNames.length; i++) {
-    this.push(classNames[i]);
+    this$1[i] = classNames[i];
   }
   this._updateClassName = function () {
     el.className = this.join(' ');
@@ -21,10 +25,12 @@ ClassList.prototype.add = function (className) {
 }
 
 ClassList.prototype.contains = function (className) {
+  var this$1 = this;
+
   var found = false;
 
-  for (var i = 0; i < this.length; i++) {
-    if (this[i] === className) {
+  for (var i = 0; i < this$1.length; i++) {
+    if (this$1[i] === className) {
       found = true;
       break;
     }
@@ -32,10 +38,12 @@ ClassList.prototype.contains = function (className) {
 }
 
 ClassList.prototype.remove = function (className) {
-  for (var i = 0; i < this.length; i++) {
+  var this$1 = this;
+
+  for (var i = 0; i < this$1.length; i++) {
     if (classNames[i] === className) {
-      this.splice(i, 1);
-      this._updateClassName();
+      this$1.splice(i, 1);
+      this$1._updateClassName();
     }
   }
 }
@@ -139,52 +147,60 @@ HTMLElement.prototype.getAttribute = function (attr) {
 }
 
 HTMLElement.prototype.appendChild = function (child) {
+  var this$1 = this;
+
   if (this.isVoidEl) {
     return; // Silently ignored
   }
   child.parentNode = this;
-  for (var i = 0; i < this.childNodes.length; i++) {
-    if (this.childNodes[i] === child) {
-      this.childNodes.splice(i, 1);
+  for (var i = 0; i < this$1.childNodes.length; i++) {
+    if (this$1.childNodes[i] === child) {
+      this$1.childNodes.splice(i, 1);
     }
   }
   this.childNodes.push(child);
 }
 
 HTMLElement.prototype.insertBefore = function (child, before) {
+  var this$1 = this;
+
   if (this.isVoidEl) {
     return; // Silently ignored
   }
   child.parentNode = this;
-  for (var i = 0; i < this.childNodes.length; i++) {
-    if (this.childNodes[i] === before) {
-      this.childNodes.splice(i++, 0, child);
-    } else if (this.childNodes[i] === child) {
-      this.childNodes.splice(i, 1);
+  for (var i = 0; i < this$1.childNodes.length; i++) {
+    if (this$1.childNodes[i] === before) {
+      this$1.childNodes.splice(i++, 0, child);
+    } else if (this$1.childNodes[i] === child) {
+      this$1.childNodes.splice(i, 1);
     }
   }
 }
 
 HTMLElement.prototype.replaceChild = function (child, replace) {
+  var this$1 = this;
+
   if (this.isVoidEl) {
     return;
   }
   child.parentNode = this;
-  for (var i = 0; i < this.childNodes.length; i++) {
-    if (this.childNodes[i] === replace) {
-      this.childNodes[i] = child;
+  for (var i = 0; i < this$1.childNodes.length; i++) {
+    if (this$1.childNodes[i] === replace) {
+      this$1.childNodes[i] = child;
     }
   }
 }
 
 HTMLElement.prototype.removeChild = function (child) {
+  var this$1 = this;
+
   if (this.isVoidEl) {
     return; // Silently ignored
   }
   child.parentNode = null;
-  for (var i = 0; i < this.childNodes.length; i++) {
-    if (this.childNodes[i] === child) {
-      this.childNodes.splice(i, 1);
+  for (var i = 0; i < this$1.childNodes.length; i++) {
+    if (this$1.childNodes[i] === child) {
+      this$1.childNodes.splice(i, 1);
     }
   }
 }
@@ -224,10 +240,12 @@ Object.defineProperties(HTMLElement.prototype, {
   },
   nextSibling: {
     get: function () {
+      var this$1 = this;
+
       var siblings = this.parentNode.childNodes;
 
       for (var i = 0; i < siblings.length; i++) {
-        if (siblings[i] === this) {
+        if (siblings[i] === this$1) {
           return siblings[i + 1];
         }
       }

@@ -3,7 +3,7 @@ import { ClassList } from './classlist';
 import { Node } from './node';
 
 // Source: https://www.w3.org/TR/html-markup/syntax.html#syntax-elements
-var voidElementLookup = 'area base br col command embed hr img input keygen link meta param source track wbr'.split(' ').reduce(function (lookup, tagName) {
+const voidElementLookup = 'area base br col command embed hr img input keygen link meta param source track wbr'.split(' ').reduce(function (lookup, tagName) {
   lookup[tagName] = true;
   return lookup;
 }, {});
@@ -12,7 +12,7 @@ export function HTMLElement (options) {
   this.childNodes = [];
   this.style = {};
 
-  for (var key in options) {
+  for (const key in options) {
     this[key] = options[key];
   }
 
@@ -26,7 +26,7 @@ export function HTMLElement (options) {
 HTMLElement.prototype = Object.create(Node.prototype);
 HTMLElement.prototype.constructor = HTMLElement;
 
-var shouldNotRender = {
+const shouldNotRender = {
   tagName: true,
   view: true,
   isVoidEl: true,
@@ -36,12 +36,12 @@ var shouldNotRender = {
 }
 
 HTMLElement.prototype.render = function (inner) {
-  var attributes = [];
-  var hasChildren = false;
-  var content = '';
-  var isVoidEl = this.isVoidEl;
+  const attributes = [];
+  let hasChildren = false;
+  let content = '';
+  const isVoidEl = this.isVoidEl;
 
-  for (var key in this) {
+  for (const key in this) {
     if ('isVoidEl' === key || !this.hasOwnProperty(key)) {
       continue;
     }
@@ -54,8 +54,8 @@ HTMLElement.prototype.render = function (inner) {
     } else if (key === '_innerHTML') {
       content = this._innerHTML;
     } else if (key === 'style') {
-      var styles = '';
-      for (var styleName in this.style) {
+      let styles = '';
+      for (const styleName in this.style) {
         styles += styleName + ':' + this.style[styleName] + ';';
       }
       if (styles && styles.length) {
@@ -103,7 +103,7 @@ HTMLElement.prototype.appendChild = function (child) {
     return; // Silently ignored
   }
   child.parentNode = this;
-  for (var i = 0; i < this.childNodes.length; i++) {
+  for (let i = 0; i < this.childNodes.length; i++) {
     if (this.childNodes[i] === child) {
       this.childNodes.splice(i, 1);
     }
@@ -116,7 +116,7 @@ HTMLElement.prototype.insertBefore = function (child, before) {
     return; // Silently ignored
   }
   child.parentNode = this;
-  for (var i = 0; i < this.childNodes.length; i++) {
+  for (let i = 0; i < this.childNodes.length; i++) {
     if (this.childNodes[i] === before) {
       this.childNodes.splice(i++, 0, child);
     } else if (this.childNodes[i] === child) {
@@ -130,7 +130,7 @@ HTMLElement.prototype.replaceChild = function (child, replace) {
     return;
   }
   child.parentNode = this;
-  for (var i = 0; i < this.childNodes.length; i++) {
+  for (let i = 0; i < this.childNodes.length; i++) {
     if (this.childNodes[i] === replace) {
       this.childNodes[i] = child;
     }
@@ -142,7 +142,7 @@ HTMLElement.prototype.removeChild = function (child) {
     return; // Silently ignored
   }
   child.parentNode = null;
-  for (var i = 0; i < this.childNodes.length; i++) {
+  for (let i = 0; i < this.childNodes.length; i++) {
     if (this.childNodes[i] === child) {
       this.childNodes.splice(i, 1);
     }
@@ -184,9 +184,9 @@ Object.defineProperties(HTMLElement.prototype, {
   },
   nextSibling: {
     get: function () {
-      var siblings = this.parentNode.childNodes;
+      const siblings = this.parentNode.childNodes;
 
-      for (var i = 0; i < siblings.length; i++) {
+      for (let i = 0; i < siblings.length; i++) {
         if (siblings[i] === this) {
           return siblings[i + 1];
         }

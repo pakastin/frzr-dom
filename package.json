@@ -4,7 +4,7 @@
   "description": "render FRZR on server side",
   "main": "dist/frzr-dom.js",
   "scripts": {
-    "build": "rollup -f cjs src/index.js -o dist/frzr-dom.js",
+    "build": "rollup -c -f cjs src/index.js -o dist/frzr-dom.js",
     "postversion": "git push --tags",
     "test": "tape test/frzr.js && find test -name \"*.spec.js\" -exec rollup -f cjs {} \\;|node"
   },
@@ -12,6 +12,7 @@
   "license": "ISC",
   "devDependencies": {
     "rollup": "~0.25.8",
+    "rollup-plugin-buble": "~0.6.0",
     "uglify-js": "~2.6.2"
   }
 }

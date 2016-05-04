@@ -1,9 +1,11 @@
 
 export function ClassList (el) {
-  var classNames = (this.className && this.className.split(' ')) || [];
+  const classNames = (this.className && this.className.split(' ')) || [];
 
-  for (var i = 0; i < classNames.length; i++) {
-    this.push(classNames[i]);
+  this.length = classNames.length;
+
+  for (let i = 0; i < classNames.length; i++) {
+    this[i] = classNames[i];
   }
   this._updateClassName = function () {
     el.className = this.join(' ');
@@ -20,9 +22,9 @@ ClassList.prototype.add = function (className) {
 }
 
 ClassList.prototype.contains = function (className) {
-  var found = false;
+  let found = false;
 
-  for (var i = 0; i < this.length; i++) {
+  for (let i = 0; i < this.length; i++) {
     if (this[i] === className) {
       found = true;
       break;
@@ -31,7 +33,7 @@ ClassList.prototype.contains = function (className) {
 }
 
 ClassList.prototype.remove = function (className) {
-  for (var i = 0; i < this.length; i++) {
+  for (let i = 0; i < this.length; i++) {
     if (classNames[i] === className) {
       this.splice(i, 1);
       this._updateClassName();
