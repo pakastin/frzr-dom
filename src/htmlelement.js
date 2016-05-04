@@ -69,6 +69,9 @@ HTMLElement.prototype.render = function (inner) {
     } else if (key === 'textContent') {
       content = this.textContent;
     } else if (!shouldNotRender[key]) {
+      if (typeof this[key] === 'function') {
+        continue;
+      }
       attributes.push(key + '="' + this[key] + '"');
     }
   }

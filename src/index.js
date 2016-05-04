@@ -19,10 +19,10 @@ global.navigator = {
   userAgent: ''
 }
 
-export function render (view) {
+export function render (view, inner) {
   const el = view.el || view;
 
-  return el.render();
+  return el.render(inner);
 }
 
 function createElement (tagName) {
