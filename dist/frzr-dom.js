@@ -27,14 +27,12 @@ ClassList.prototype.add = function (className) {
 ClassList.prototype.contains = function (className) {
   var this$1 = this;
 
-  var found = false;
-
   for (var i = 0; i < this$1.length; i++) {
     if (this$1[i] === className) {
-      found = true;
-      break;
+      return true;
     }
   }
+  return false;
 }
 
 ClassList.prototype.remove = function (className) {
@@ -86,10 +84,11 @@ var shouldNotRender = {
 }
 
 HTMLElement.prototype.render = function (inner) {
+  var isVoidEl = this.isVoidEl;
   var attributes = [];
+
   var hasChildren = false;
   var content = '';
-  var isVoidEl = this.isVoidEl;
 
   for (var key in this) {
     if ('isVoidEl' === key || !this.hasOwnProperty(key)) {
@@ -105,9 +104,11 @@ HTMLElement.prototype.render = function (inner) {
       content = this._innerHTML;
     } else if (key === 'style') {
       var styles = '';
+
       for (var styleName in this.style) {
         styles += styleName + ':' + this.style[styleName] + ';';
       }
+
       if (styles && styles.length) {
         attributes.push('style="' + styles + '"');
       }
@@ -183,7 +184,7 @@ HTMLElement.prototype.replaceChild = function (child, replace) {
   var this$1 = this;
 
   if (this.isVoidEl) {
-    return;
+    return; // Silently ignored
   }
   child.parentNode = this;
   for (var i = 0; i < this$1.childNodes.length; i++) {

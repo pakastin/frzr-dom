@@ -38,10 +38,11 @@ const shouldNotRender = {
 }
 
 HTMLElement.prototype.render = function (inner) {
+  const isVoidEl = this.isVoidEl;
   const attributes = [];
+
   let hasChildren = false;
   let content = '';
-  const isVoidEl = this.isVoidEl;
 
   for (const key in this) {
     if ('isVoidEl' === key || !this.hasOwnProperty(key)) {
@@ -57,9 +58,11 @@ HTMLElement.prototype.render = function (inner) {
       content = this._innerHTML;
     } else if (key === 'style') {
       let styles = '';
+
       for (const styleName in this.style) {
         styles += styleName + ':' + this.style[styleName] + ';';
       }
+
       if (styles && styles.length) {
         attributes.push('style="' + styles + '"');
       }
@@ -129,7 +132,7 @@ HTMLElement.prototype.insertBefore = function (child, before) {
 
 HTMLElement.prototype.replaceChild = function (child, replace) {
   if (this.isVoidEl) {
-    return;
+    return; // Silently ignored
   }
   child.parentNode = this;
   for (let i = 0; i < this.childNodes.length; i++) {
