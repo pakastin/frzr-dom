@@ -27,11 +27,12 @@ var shouldNotRender = {
   tagName: true,
   view: true,
   isVoidEl: true,
+  parent: true,
   parentNode: true,
   childNodes: true
 }
 
-HTMLElement.prototype.render = function () {
+HTMLElement.prototype.render = function (inner) {
   var attributes = [];
   var hasChildren = false;
   var content = '';
@@ -47,8 +48,8 @@ HTMLElement.prototype.render = function () {
       }
     } else if (key === 'className') {
       attributes.push('class="' + this[key] + '"');
-    } else if (key === 'innerHTML') {
-      content = this.innerHTML;
+    } else if (key === '_innerHTML') {
+      content = this._innerHTML;
     } else if (key === 'style') {
       var styles = '';
       for (var styleName in this.style) {
@@ -61,6 +62,16 @@ HTMLElement.prototype.render = function () {
       content = this.textContent;
     } else if (!shouldNotRender[key]) {
       attributes.push(key + '="' + this[key] + '"');
+    }
+  }
+
+  if (inner) {
+    if (!isVoidEl && hasChildren) {
+      return this.childNodes.map(childRenderer).join('');
+    } else if (!isVoidEl && content){
+      return content;
+    } else {
+      return '';
     }
   }
 
@@ -111,6 +122,18 @@ HTMLElement.prototype.insertBefore = function (child, before) {
   }
 }
 
+HTMLElement.prototype.replaceChild = function (child, replace) {
+  if (this.isVoidEl) {
+    return;
+  }
+  child.parentNode = this;
+  for (var i = 0; i < this.childNodes.length; i++) {
+    if (this.childNodes[i] === replace) {
+      this.childNodes[i] = child;
+    }
+  }
+}
+
 HTMLElement.prototype.removeChild = function (child) {
   if (this.isVoidEl) {
     return; // Silently ignored
@@ -136,6 +159,19 @@ Object.defineProperties(HTMLElement.prototype, {
         this._classList = new ClassList(this);
       }
       return this._classList;
+    }
+  },
+  innerHTML: {
+    get: function () {
+      return this._innerHTML || this.render(true);
+    },
+    set: function (value) {
+      return this._innerHTML = value;
+    }
+  },
+  outerHTML: {
+    get: function () {
+      return this.render();
     }
   },
   firstChild: {

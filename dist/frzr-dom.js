@@ -42,6 +42,9 @@ ClassList.prototype.remove = function (className) {
 
 function Node () {}
 
+// Source: https://www.w3.org/TR/html-markup/syntax.html#syntax-elements
+var rVoidElements = /area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr/;
+
 function HTMLElement (options) {
   this.childNodes = [];
   this.style = {};
@@ -49,26 +52,44 @@ function HTMLElement (options) {
   for (var key in options) {
     this[key] = options[key];
   }
+
+  if (!this.tagName) {
+    this.tagName = 'div';
+  }
+
+  this.isVoidEl = rVoidElements.test(this.tagName.toLowerCase());
 }
 
 HTMLElement.prototype = Object.create(Node.prototype);
 HTMLElement.prototype.constructor = HTMLElement;
 
-HTMLElement.prototype.render = function () {
+var shouldNotRender = {
+  tagName: true,
+  view: true,
+  isVoidEl: true,
+  parent: true,
+  parentNode: true,
+  childNodes: true
+}
+
+HTMLElement.prototype.render = function (inner) {
   var attributes = [];
   var hasChildren = false;
   var content = '';
+  var isVoidEl = this.isVoidEl;
 
   for (var key in this) {
-    if (!this.hasOwnProperty(key)) {
+    if ('isVoidEl' === key || !this.hasOwnProperty(key)) {
       continue;
     }
-    if (key === 'childNodes') {
+    if (!isVoidEl && key === 'childNodes') {
       if (this.childNodes.length) {
         hasChildren = true;
       }
-    } else if (key === 'innerHTML') {
-      content = this.innerHTML;
+    } else if (key === 'className') {
+      attributes.push('class="' + this[key] + '"');
+    } else if (key === '_innerHTML') {
+      content = this._innerHTML;
     } else if (key === 'style') {
       var styles = '';
       for (var styleName in this.style) {
@@ -79,17 +100,27 @@ HTMLElement.prototype.render = function () {
       }
     } else if (key === 'textContent') {
       content = this.textContent;
-    } else if (key !== 'view' && key !== 'tagName' && key !== 'parentNode') {
+    } else if (!shouldNotRender[key]) {
       attributes.push(key + '="' + this[key] + '"');
     }
   }
 
-  if (hasChildren) {
+  if (inner) {
+    if (!isVoidEl && hasChildren) {
+      return this.childNodes.map(childRenderer).join('');
+    } else if (!isVoidEl && content){
+      return content;
+    } else {
+      return '';
+    }
+  }
+
+  if (!isVoidEl && hasChildren) {
     return '<' + [this.tagName].concat(attributes).join(' ') + '>' + this.childNodes.map(childRenderer).join('') + '</' + this.tagName + '>'
-  } else if (content) {
+  } else if (!isVoidEl && content) {
     return '<' + [this.tagName].concat(attributes).join(' ') + '>' + content + '</' + this.tagName + '>';
   } else {
-    return '<' + [this.tagName].concat(attributes).join(' ') + '>';
+    return '<' + [this.tagName].concat(attributes).join(' ') + (isVoidEl ? '/>' : '></' + this.tagName + '>');
   }
 }
 
@@ -105,6 +136,9 @@ HTMLElement.prototype.getAttribute = function (attr) {
 }
 
 HTMLElement.prototype.appendChild = function (child) {
+  if (this.isVoidEl) {
+    return; // Silently ignored
+  }
   child.parentNode = this;
   for (var i = 0; i < this.childNodes.length; i++) {
     if (this.childNodes[i] === child) {
@@ -115,6 +149,9 @@ HTMLElement.prototype.appendChild = function (child) {
 }
 
 HTMLElement.prototype.insertBefore = function (child, before) {
+  if (this.isVoidEl) {
+    return; // Silently ignored
+  }
   child.parentNode = this;
   for (var i = 0; i < this.childNodes.length; i++) {
     if (this.childNodes[i] === before) {
@@ -125,7 +162,22 @@ HTMLElement.prototype.insertBefore = function (child, before) {
   }
 }
 
+HTMLElement.prototype.replaceChild = function (child, replace) {
+  if (this.isVoidEl) {
+    return;
+  }
+  child.parentNode = this;
+  for (var i = 0; i < this.childNodes.length; i++) {
+    if (this.childNodes[i] === replace) {
+      this.childNodes[i] = child;
+    }
+  }
+}
+
 HTMLElement.prototype.removeChild = function (child) {
+  if (this.isVoidEl) {
+    return; // Silently ignored
+  }
   child.parentNode = null;
   for (var i = 0; i < this.childNodes.length; i++) {
     if (this.childNodes[i] === child) {
@@ -135,9 +187,31 @@ HTMLElement.prototype.removeChild = function (child) {
 }
 
 Object.defineProperties(HTMLElement.prototype, {
+  _classList: {
+    value: null,
+    enumerable: false,
+    configurable: false,
+    writable: true
+  },
   classList: {
     get: function () {
-      return new ClassList(this);
+      if (!this._classList) {
+        this._classList = new ClassList(this);
+      }
+      return this._classList;
+    }
+  },
+  innerHTML: {
+    get: function () {
+      return this._innerHTML || this.render(true);
+    },
+    set: function (value) {
+      return this._innerHTML = value;
+    }
+  },
+  outerHTML: {
+    get: function () {
+      return this.render();
     }
   },
   firstChild: {
