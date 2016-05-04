@@ -68,7 +68,9 @@ function HTMLElement (options) {
     this.tagName = 'div';
   }
 
-  this.isVoidEl = voidElementLookup[this.tagName.toLowerCase()];
+  this.tagName = this.tagName.toLowerCase();
+
+  this.isVoidEl = voidElementLookup[this.tagName];
 }
 
 HTMLElement.prototype = Object.create(Node.prototype);
