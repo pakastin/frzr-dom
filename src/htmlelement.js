@@ -98,6 +98,9 @@ HTMLElement.prototype.appendChild = function (child) {
 }
 
 HTMLElement.prototype.insertBefore = function (child, before) {
+  if (this.isVoidEl) {
+    return; // Silently ignored
+  }
   child.parentNode = this;
   for (var i = 0; i < this.childNodes.length; i++) {
     if (this.childNodes[i] === before) {
