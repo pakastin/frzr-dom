@@ -1,6 +1,7 @@
+
 import test from "tape";
-import { Node } from "../src/node";
-import { TextNode } from "../src/textnode";
+import { Node } from "../../src/node";
+import { TextNode } from "../../src/textnode";
 
 test("TextNode", t => {
     t.test("extends from Node", t => {

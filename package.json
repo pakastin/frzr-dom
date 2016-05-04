@@ -5,8 +5,9 @@
   "main": "dist/frzr-dom.js",
   "scripts": {
     "build": "rollup -c -f cjs src/index.js -o dist/frzr-dom.js",
+    "prepublish": "npm test",
     "postversion": "git push --tags",
-    "test": "tape test/frzr.js && find test -name \"*.spec.js\" -exec rollup -f cjs {} \\;|node"
+    "test": "tape test/frzr.js && find test/spec -name \"*.spec.js\" -exec rollup -f cjs {} \\;|node"
   },
   "author": "",
   "license": "ISC",

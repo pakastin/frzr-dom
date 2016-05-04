@@ -1,7 +1,8 @@
+
 import test from "tape";
-import { HTMLElement } from "../src/htmlelement";
-import { Node } from "../src/node";
-import { ClassList } from "../src/classlist";
+import { HTMLElement } from "../../src/htmlelement";
+import { Node } from "../../src/node";
+import { ClassList } from "../../src/classlist";
 
 test("HTMLElement", t => {
     t.test("extends Node", t => {
