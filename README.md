@@ -7,7 +7,7 @@ npm install frzr-dom
 ```
 
 ## usage
-```
+```js
 var render = require('frzr-dom').render;
 
 ...
