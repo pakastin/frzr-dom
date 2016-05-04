@@ -89,7 +89,7 @@ test("HTMLElement", t => {
     });
 
     t.test("childNodes for void elements are silently dropped", t => {
-        const el = new HTMLElement({ tagName: "br" });
+        var el = new HTMLElement({ tagName: "br" });
         el.appendChild(new HTMLElement());
         t.equal(el.firstChild, undefined);
         t.end();
