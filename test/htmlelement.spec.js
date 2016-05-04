@@ -41,6 +41,13 @@ test("HTMLElement", t => {
         t.end();
     });
 
+    t.test("returns same classList instance on subsequent access", t => {
+        var el = new HTMLElement();
+        var cl = el.classList;
+        t.equal(el.classList, cl, "returns same instance");
+        t.end();
+    });
+
     t.test("implements setAttribute/getAttribute", t => {
         var el = new HTMLElement();
 
