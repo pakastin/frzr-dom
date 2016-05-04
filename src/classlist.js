@@ -22,14 +22,12 @@ ClassList.prototype.add = function (className) {
 }
 
 ClassList.prototype.contains = function (className) {
-  let found = false;
-
   for (let i = 0; i < this.length; i++) {
     if (this[i] === className) {
-      found = true;
-      break;
+      return true;
     }
   }
+  return false;
 }
 
 ClassList.prototype.remove = function (className) {
