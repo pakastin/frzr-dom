@@ -124,9 +124,18 @@ HTMLElement.prototype.removeChild = function (child) {
 }
 
 Object.defineProperties(HTMLElement.prototype, {
+  _classList: {
+    value: null,
+    enumerable: false,
+    configurable: false,
+    writable: true
+  },
   classList: {
     get: function () {
-      return new ClassList(this);
+      if (!this._classList) {
+        this._classList = new ClassList(this);
+      }
+      return this._classList;
     }
   },
   firstChild: {
