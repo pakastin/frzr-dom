@@ -43,7 +43,10 @@ ClassList.prototype.remove = function (className) {
 function Node () {}
 
 // Source: https://www.w3.org/TR/html-markup/syntax.html#syntax-elements
-var rVoidElements = /area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr/;
+var voidElementLookup = 'area base br col command embed hr img input keygen link meta param source track wbr'.split(' ').reduce(function (lookup, tagName) {
+  lookup[tagName] = true;
+  return lookup;
+}, {});
 
 function HTMLElement (options) {
   this.childNodes = [];
@@ -57,7 +60,7 @@ function HTMLElement (options) {
     this.tagName = 'div';
   }
 
-  this.isVoidEl = rVoidElements.test(this.tagName.toLowerCase());
+  this.isVoidEl = voidElementLookup[this.tagName.toLowerCase()];
 }
 
 HTMLElement.prototype = Object.create(Node.prototype);
