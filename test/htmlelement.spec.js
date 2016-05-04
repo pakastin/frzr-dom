@@ -148,4 +148,18 @@ test("HTMLElement", t => {
         t.equal(el.firstChild, child2);
         t.end();
     });
+
+    t.test("nextSibling", t => {
+        var el = new HTMLElement();
+        var child1 = new HTMLElement();
+        var child2 = new HTMLElement();
+
+        el.appendChild(child1);
+        el.appendChild(child2);
+
+        t.equal(el.firstChild, child1);
+        t.equal(child1.nextSibling, child2);
+        t.equal(child2.nextSibling, undefined);
+        t.end();
+    });
 });
