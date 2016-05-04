@@ -2,6 +2,9 @@
 import { ClassList } from './classlist';
 import { Node } from './node';
 
+// Source: https://www.w3.org/TR/html-markup/syntax.html#syntax-elements
+var rVoidElements = /area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr/;
+
 export function HTMLElement (options) {
   this.childNodes = [];
   this.style = {};
@@ -9,29 +12,41 @@ export function HTMLElement (options) {
   for (var key in options) {
     this[key] = options[key];
   }
+
+  if (!this.tagName) {
+    this.tagName = 'div';
+  }
+
+  this.isVoidEl = rVoidElements.test(this.tagName.toLowerCase());
 }
 
 HTMLElement.prototype = Object.create(Node.prototype);
 HTMLElement.prototype.constructor = HTMLElement;
 
-var doNotRender = {
+var shouldNotRender = {
   tagName: true,
-  view: true
+  view: true,
+  isVoidEl: true,
+  parentNode: true,
+  childNodes: true
 }
 
 HTMLElement.prototype.render = function () {
   var attributes = [];
   var hasChildren = false;
   var content = '';
+  var isVoidEl = this.isVoidEl;
 
   for (var key in this) {
-    if (!this.hasOwnProperty(key)) {
+    if ('isVoidEl' === key || !this.hasOwnProperty(key)) {
       continue;
     }
-    if (key === 'childNodes') {
+    if (!isVoidEl && key === 'childNodes') {
       if (this.childNodes.length) {
         hasChildren = true;
       }
+    } else if (key === 'className') {
+      attributes.push('class="' + this[key] + '"');
     } else if (key === 'innerHTML') {
       content = this.innerHTML;
     } else if (key === 'style') {
@@ -44,17 +59,17 @@ HTMLElement.prototype.render = function () {
       }
     } else if (key === 'textContent') {
       content = this.textContent;
-    } else if (key !== 'view' && key !== 'tagName' && key !== 'parentNode') {
+    } else if (!shouldNotRender[key]) {
       attributes.push(key + '="' + this[key] + '"');
     }
   }
 
-  if (hasChildren) {
+  if (!isVoidEl && hasChildren) {
     return '<' + [this.tagName].concat(attributes).join(' ') + '>' + this.childNodes.map(childRenderer).join('') + '</' + this.tagName + '>'
-  } else if (content) {
+  } else if (!isVoidEl && content) {
     return '<' + [this.tagName].concat(attributes).join(' ') + '>' + content + '</' + this.tagName + '>';
   } else {
-    return '<' + [this.tagName].concat(attributes).join(' ') + '>';
+    return '<' + [this.tagName].concat(attributes).join(' ') + (isVoidEl ? '/>' : '></' + this.tagName + '>');
   }
 }
 
@@ -70,6 +85,9 @@ HTMLElement.prototype.getAttribute = function (attr) {
 }
 
 HTMLElement.prototype.appendChild = function (child) {
+  if (this.isVoidEl) {
+    return; // Silently ignored
+  }
   child.parentNode = this;
   for (var i = 0; i < this.childNodes.length; i++) {
     if (this.childNodes[i] === child) {
@@ -80,6 +98,9 @@ HTMLElement.prototype.appendChild = function (child) {
 }
 
 HTMLElement.prototype.insertBefore = function (child, before) {
+  if (this.isVoidEl) {
+    return; // Silently ignored
+  }
   child.parentNode = this;
   for (var i = 0; i < this.childNodes.length; i++) {
     if (this.childNodes[i] === before) {
@@ -91,6 +112,9 @@ HTMLElement.prototype.insertBefore = function (child, before) {
 }
 
 HTMLElement.prototype.removeChild = function (child) {
+  if (this.isVoidEl) {
+    return; // Silently ignored
+  }
   child.parentNode = null;
   for (var i = 0; i < this.childNodes.length; i++) {
     if (this.childNodes[i] === child) {
@@ -100,9 +124,18 @@ HTMLElement.prototype.removeChild = function (child) {
 }
 
 Object.defineProperties(HTMLElement.prototype, {
+  _classList: {
+    value: null,
+    enumerable: false,
+    configurable: false,
+    writable: true
+  },
   classList: {
     get: function () {
-      return new ClassList(this);
+      if (!this._classList) {
+        this._classList = new ClassList(this);
+      }
+      return this._classList;
     }
   },
   firstChild: {
