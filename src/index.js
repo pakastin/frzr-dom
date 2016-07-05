@@ -8,6 +8,8 @@ export function Document () {
   this.body = new HTMLElement();
 }
 
+global.document = new Document();
+
 global.HTMLElement = HTMLElement;
 global.Node = Node;
 global.navigator = {

@@ -1,5 +1,6 @@
 
 import test from "tape";
+import { Document } from '../../src/index';
 import { HTMLElement } from "../../src/htmlelement";
 import { Node } from "../../src/node";
 import { ClassList } from "../../src/classlist";
