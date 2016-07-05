@@ -275,22 +275,8 @@ TextNode.prototype.render = function () {
 }
 
 function Document () {
-  this.head = new HTMLElement();
-  this.body = new HTMLElement();
-}
-
-global.document = new Document();
-
-global.HTMLElement = HTMLElement;
-global.Node = Node;
-global.navigator = {
-  userAgent: ''
-}
-
-function render (view, inner) {
-  var el = view.el || view;
-
-  return el.render(inner);
+  this.head = this.createElement('head');
+  this.body = this.createElement('body');
 }
 
 Document.prototype.createElement = function (tagName) {
@@ -307,6 +293,20 @@ Document.prototype.createElementNS = function (ns, tagName) {
 
 Document.prototype.createTextNode = function (text) {
   return new TextNode(text);
+}
+
+global.document = new Document();
+
+global.HTMLElement = HTMLElement;
+global.Node = Node;
+global.navigator = {
+  userAgent: ''
+}
+
+function render (view, inner) {
+  var el = view.el || view;
+
+  return el.render(inner);
 }
 
 exports.Document = Document;
