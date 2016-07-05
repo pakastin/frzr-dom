@@ -3,7 +3,7 @@ import { HTMLElement } from './htmlelement';
 import { Node } from './node';
 import { TextNode } from './textnode';
 
-function Document () {
+export function Document () {
   this.head = new HTMLElement();
   this.body = new HTMLElement();
 }
