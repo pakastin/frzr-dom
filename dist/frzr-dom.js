@@ -274,16 +274,17 @@ TextNode.prototype.render = function () {
   return this.textContent;
 }
 
+function Document () {
+  this.head = new HTMLElement();
+  this.body = new HTMLElement();
+}
+
 global.document = {
   createElement: createElement,
   createTextNode: createTextNode,
-  createElementNS: createElementNS,
-  body: new HTMLElement({
-    tagName: 'body'
-  })
+  createElementNS: createElementNS
 };
 
-global.window = {};
 global.HTMLElement = HTMLElement;
 global.Node = Node;
 global.navigator = {
@@ -296,20 +297,21 @@ function render (view, inner) {
   return el.render(inner);
 }
 
-function createElement (tagName) {
+Document.prototype.createElement = function (tagName) {
   return new HTMLElement({
     tagName: tagName
   });
 }
 
-function createElementNS (ns, tagName) {
+Document.prototype.createElementNS = function (ns, tagName) {
   return new HTMLElement({
     tagName: tagName
   });
 }
 
-function createTextNode (text) {
+Document.prototype.createTextNode = function (text) {
   return new TextNode(text);
 }
 
+exports.Document = Document;
 exports.render = render;
