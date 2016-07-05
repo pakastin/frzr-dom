@@ -1,6 +1,6 @@
 {
   "name": "frzr-dom",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "render FRZR on server side",
   "main": "dist/frzr-dom.js",
   "scripts": {
