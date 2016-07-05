@@ -4,8 +4,8 @@ import { Node } from './node';
 import { TextNode } from './textnode';
 
 export function Document () {
-  this.head = new HTMLElement();
-  this.body = new HTMLElement();
+  this.head = this.createElement('head');
+  this.body = this.createElement('body');
 }
 
 global.document = new Document();
