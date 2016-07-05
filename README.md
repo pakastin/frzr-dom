@@ -11,8 +11,12 @@ npm install frzr-dom
 var render = require('frzr-dom').render;
 
 ...
-
-console.log(render(document.body));
+var document = {
+  body: el('body',
+    el('h1', 'Hello world!')
+  )
+};
+console.log(render(document.body)); --> <body><h1>Hello world!</h1></body>
 ```
 - Requiring `frzr-dom` will create a fake DOM for [FRZR](https://frzr.js.org).
 - You can then use `render(view)` or `render(el)` to produce HTML. That's it!
