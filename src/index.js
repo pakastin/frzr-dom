@@ -8,12 +8,6 @@ export function Document () {
   this.body = new HTMLElement();
 }
 
-global.document = {
-  createElement: createElement,
-  createTextNode: createTextNode,
-  createElementNS: createElementNS
-};
-
 global.HTMLElement = HTMLElement;
 global.Node = Node;
 global.navigator = {
